@@ -16,6 +16,8 @@
     <string>6.0</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
+    <key>NSHighResolutionCapable</key>
+    <string>True</string>
     <key>CFBundleShortVersionString</key>
     <string>0.10.1</string>
     <key>CFBundleSignature</key>
