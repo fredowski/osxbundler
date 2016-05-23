@@ -12,7 +12,7 @@
 
 # The source tree for pspp is here. This is only required if you
 # build with option --git
-psppsource=`pwd`/../..
+psppsource=`pwd`/../pspp
 
 # Check if we are on MacOS
 if ! test `uname` = "Darwin"; then
@@ -98,14 +98,16 @@ if test $buildfromsource = "true"; then
                          CPPFLAGS=-I$bundleinstall/include \
                          --enable-relocatable
     make
+    make html
     make install
+    make install-html
     popd
 else
     # Install the pspp package from macports
     # This is a custom package for the moment as this requires the relocatable variant
     echo "Installing pspp from macports package"
     pushd ./macports-custom-packages/pspp
-    port install +reloc
+    port install +reloc +doc
     popd
 fi
 
@@ -140,6 +142,7 @@ mv ./pspp.app /tmp/psppbundle
 rm -rf pspp.dmg
 hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp.dmg
 rm -rf /tmp/psppbundle
+rm -rf pspp.icns
 
 echo "Done! Your dmg file is pspp.dmg"
 echo "You can remove the install directory: $bundleinstall"

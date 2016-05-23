@@ -110,8 +110,13 @@
   </data>
 
   <data>
+    ${prefix}/share/doc/pspp
+  </data>
+
+  <data>
     ${prefix}/share/mime
   </data>
+
   <data>
     ${prefix}/share/glib-2.0
   </data>  
