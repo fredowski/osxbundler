@@ -59,7 +59,11 @@ if test -d $bundleinstall; then
     echo "Found existing macports directory $bundleinstall"
     echo "Updating macports packages"
     port uninstall pspp
-    port uninstall gtk-mac-bundler
+    if test -d ./build; then
+        pushd ./build
+        make uninstall
+        popd
+    fi
 else
     echo "Creating Macports installation in $bundleinstall"
     mkdir $bundleinstall
@@ -104,18 +108,12 @@ if test $buildfromsource = "true"; then
     popd
 else
     # Install the pspp package from macports
-    # This is a custom package for the moment as this requires the relocatable variant
     echo "Installing pspp from macports package"
-    pushd ./macports-custom-packages/pspp
-    port install +reloc +doc
-    popd
+    port install pspp +reloc +doc
 fi
 
 # install the mac gtk-mac-bundler
-# Custom package for the moment...
-pushd ./macports-custom-packages/gtk-mac-bundler
-port install
-popd
+port install gtk-mac-bundler
 
 # Create the icns file
 makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
