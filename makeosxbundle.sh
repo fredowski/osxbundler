@@ -93,7 +93,13 @@ if test $buildfromsource = "true"; then
     port install pkgconfig texinfo makeicns cairo fontconfig freetype \
      gettext glib2 gsl libiconv libxml2 ncurses pango readline zlib atk \
      gdk-pixbuf2 gtksourceview3 adwaita-icon-theme
-# Configure and build pspp
+    # Retrieve and Set Version Info
+    pushd $psppsource
+    gitversion=`git log --pretty=format:"%h" -1`
+    repoversion=`sed -n 's/AC_INIT.*\[\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' configure.ac`
+    psppversion=$repoversion-g$gitversion
+    popd
+    # Configure and build pspp
     rm -rf ./build
     mkdir ./build
     pushd build
@@ -101,7 +107,7 @@ if test $buildfromsource = "true"; then
                          LDFLAGS=-L$bundleinstalll/lib \
                          CPPFLAGS=-I$bundleinstall/include \
                          --enable-relocatable
-    make
+    make VERSION=$psppversion
     make html
     make install
     make install-html
@@ -110,6 +116,8 @@ else
     # Install the pspp package from macports
     echo "Installing pspp from macports package"
     port install pspp +reloc +doc
+    # Update the version information
+    psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
 fi
 
 # install the mac gtk-mac-bundler
@@ -120,7 +128,8 @@ makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
          -32  $bundleinstall/share/icons/hicolor/32x32/apps/pspp.png \
          -16  $bundleinstall/share/icons/hicolor/16x16/apps/pspp.png \
          -out pspp.icns
-
+# Set version information
+sed "s/0.10.1/$psppversion/g" Info-pspp.plist > Info-pspp-version.plist
 # produce the pspp.app bundle in Desktop
 export PSPPINSTALL=$bundleinstall
 gtk-mac-bundler pspp.bundle
@@ -137,10 +146,10 @@ popd
 rm -rf /tmp/psppbundle
 mkdir /tmp/psppbundle
 mv ./pspp.app /tmp/psppbundle
-rm -rf pspp.dmg
-hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp.dmg
+rm -rf pspp-*.dmg
+hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp-$psppversion.dmg
 rm -rf /tmp/psppbundle
 rm -rf pspp.icns
 
-echo "Done! Your dmg file is pspp.dmg"
+echo "Done! Your dmg file is pspp-$psppversion.dmg"
 echo "You can remove the install directory: $bundleinstall"
