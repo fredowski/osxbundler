@@ -83,6 +83,9 @@ else
     rm -rf /tmp/macports
     # Modify the default variants to use quartz
     echo "-x11 +no_x11 +quartz" > $bundleinstall/etc/macports/variants.conf
+    # Make the build be compatible with OSX Versions starting with 10.9
+    echo "macosx_deployment_target 10.9" >> $bundleinstall/etc/macports/macports.conf
+    echo "buildfromsource always" >> $bundleinstall/etc/macports/macports.conf
 fi
 
 # Install the packages for pspp
