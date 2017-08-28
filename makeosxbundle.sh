@@ -71,9 +71,9 @@ else
     rm -rf /tmp/macports
     mkdir /tmp/macports
     pushd /tmp/macports
-    curl https://distfiles.macports.org/MacPorts/MacPorts-2.3.4.tar.gz -O
-    tar xvzf Macports-2.3.4.tar.gz
-    cd Macports-2.3.4
+    curl https://distfiles.macports.org/MacPorts/MacPorts-2.4.1.tar.gz -O
+    tar xvzf Macports-2.4.1.tar.gz
+    cd Macports-2.4.1
     ./configure --prefix=$bundleinstall \
                 --with-applications-dir=$bundleinstall/Applications \
                 --with-no-root-privileges
@@ -118,7 +118,7 @@ if test $buildfromsource = "true"; then
 else
     # Install the pspp package from macports
     echo "Installing pspp from macports package"
-    port install pspp +reloc +doc
+    port -N install pspp +reloc +doc
     # Update the version information
     psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
 fi
