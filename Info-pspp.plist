@@ -7,7 +7,7 @@
     <key>CFBundleExecutable</key>
     <string>pspp</string>
     <key>CFBundleGetInfoString</key>
-    <string>0.10.1, (C) 1997-2016 http://savannah.gnu.org/projects/pspp</string>
+    <string>0.10.1, (C) 1997-2017 http://savannah.gnu.org/projects/pspp</string>
     <key>CFBundleIconFile</key>
     <string>pspp.icns</string>
     <key>CFBundleIdentifier</key>
@@ -25,8 +25,87 @@
     <key>CFBundleVersion</key>
     <string>0.10.1</string>
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright 1997 - 2016 Free Software Foundation, GNU General Public License.</string>
+    <string>Copyright 1997 - 2017 Free Software Foundation, GNU General Public License.</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.9</string>
+    <key>UTImportedTypeDeclarations</key>
+    <array>
+      <dict>
+        <key>UTTypeIdentifier</key>
+        <string>org.fsf.x-spss-sav</string>
+        <key>UTTypeReferenceURL</key>
+        <string>https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml</string>
+        <key>UTTypeDescription</key>
+        <string>SPSS Data File</string>
+        <key>UTTypeIconFile</key>
+        <string>pspp.icns</string>
+        <key>UTTypeConformsTo</key>
+        <array>
+           <string>public.data</string>
+        </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>com.apple.ostype</key>
+          <string>SAV</string>
+          <key>public.filename-extension</key>
+          <array>
+            <string>sav</string>
+            <string>zsav</string>
+          </array>
+          <key>public.mime-type</key>
+          <string>application/x-spss-sav</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>UTTypeIdentifier</key>
+        <string>org.fsf.x-spss-por</string>
+        <key>UTTypeReferenceURL</key>
+        <string>https://www.loc.gov/preservation/digital/formats/fdd/fdd000468.shtml</string>
+        <key>UTTypeDescription</key>
+        <string>SPSS Portable Data File</string>
+        <key>UTTypeIconFile</key>
+        <string>pspp.icns</string>
+        <key>UTTypeConformsTo</key>
+        <array>
+           <string>public.data</string>
+        </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>com.apple.ostype</key>
+          <string>POR</string>
+          <key>public.filename-extension</key>
+          <array>
+            <string>por</string>
+          </array>
+          <key>public.mime-type</key>
+          <string>application/x-spss-por</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>UTTypeIdentifier</key>
+        <string>org.fsf.x-spss-sps</string>
+        <key>UTTypeReferenceURL</key>
+        <string>https://www.gnu.org/software/pspp/manual/html_node/Language.html#Language</string>
+        <key>UTTypeDescription</key>
+        <string>SPSS Syntax File</string>
+        <key>UTTypeIconFile</key>
+        <string>pspp.icns</string>
+        <key>UTTypeConformsTo</key>
+        <array>
+           <string>public.data</string>
+        </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>com.apple.ostype</key>
+          <string>SPS</string>
+          <key>public.filename-extension</key>
+          <array>
+            <string>sps</string>
+          </array>
+          <key>public.mime-type</key>
+          <string>application/x-spss-sps</string>
+        </dict>
+      </dict>
+    </array>
 </dict>
 </plist>
