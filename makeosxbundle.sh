@@ -71,9 +71,9 @@ else
     rm -rf /tmp/macports
     mkdir /tmp/macports
     pushd /tmp/macports
-    curl https://distfiles.macports.org/MacPorts/MacPorts-2.4.1.tar.gz -O
-    tar xvzf Macports-2.4.1.tar.gz
-    cd Macports-2.4.1
+    curl https://distfiles.macports.org/MacPorts/MacPorts-2.4.2.tar.gz -O
+    tar xvzf Macports-2.4.2.tar.gz
+    cd Macports-2.4.2
     ./configure --prefix=$bundleinstall \
                 --with-applications-dir=$bundleinstall/Applications \
                 --with-no-root-privileges
@@ -93,7 +93,7 @@ port -v selfupdate
 port upgrade outdated || true
 if test $buildfromsource = "true"; then
     # Install the build dependencies for pspp
-    port install pkgconfig texinfo makeicns cairo fontconfig freetype \
+    port -N install pkgconfig texinfo makeicns cairo fontconfig freetype \
      gettext glib2 gsl libiconv libxml2 ncurses pango readline zlib atk \
      gdk-pixbuf2 gtksourceview3 adwaita-icon-theme
     # Retrieve and Set Version Info
@@ -109,6 +109,7 @@ if test $buildfromsource = "true"; then
     $psppsource/configure --prefix=$bundleinstall \
                          LDFLAGS=-L$bundleinstalll/lib \
                          CPPFLAGS=-I$bundleinstall/include \
+                         PKG_CONFIG_PATH=/Users/fritz/pspp/install/lib/pkgconfig \
                          --enable-relocatable
     make VERSION=$psppversion
     make html
@@ -124,7 +125,7 @@ else
 fi
 
 # install the mac gtk-mac-bundler
-port install gtk-mac-bundler
+port -N install gtk-mac-bundler
 
 # Create the icns file
 makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
