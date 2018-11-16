@@ -71,9 +71,9 @@ else
     rm -rf /tmp/macports
     mkdir /tmp/macports
     pushd /tmp/macports
-    curl https://distfiles.macports.org/MacPorts/MacPorts-2.4.2.tar.gz -O
-    tar xvzf Macports-2.4.2.tar.gz
-    cd Macports-2.4.2
+    curl https://distfiles.macports.org/MacPorts/MacPorts-2.5.4.tar.gz -O
+    tar xvzf Macports-2.5.4.tar.gz
+    cd Macports-2.5.4
     ./configure --prefix=$bundleinstall \
                 --with-applications-dir=$bundleinstall/Applications \
                 --with-no-root-privileges
