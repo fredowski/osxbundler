@@ -71,9 +71,10 @@ else
     rm -rf /tmp/macports
     mkdir /tmp/macports
     pushd /tmp/macports
-    curl https://distfiles.macports.org/MacPorts/MacPorts-2.5.4.tar.gz -O
-    tar xvzf Macports-2.5.4.tar.gz
-    cd Macports-2.5.4
+    macportsversion=2.6.2
+    curl https://distfiles.macports.org/MacPorts/MacPorts-$macportsversion.tar.gz -O
+    tar xvzf Macports-$macportsversion.tar.gz
+    cd Macports-$macportsversion
     ./configure --prefix=$bundleinstall \
                 --with-applications-dir=$bundleinstall/Applications \
                 --with-no-root-privileges
@@ -83,9 +84,13 @@ else
     rm -rf /tmp/macports
     # Modify the default variants to use quartz
     echo "-x11 +no_x11 +quartz" > $bundleinstall/etc/macports/variants.conf
-    # Make the build be compatible with OSX Versions starting with 10.9
-    echo "macosx_deployment_target 10.9" >> $bundleinstall/etc/macports/macports.conf
+    # Make the build be compatible with OSX Versions starting with 10.10
+    # echo "macosx_deployment_target 10.10" >> $bundleinstall/etc/macports/macports.conf
+    # dbus tries to install startup items which are under superuser account
+    echo "startupitem_install no"  >> $bundleinstall/etc/macports/macports.conf
     echo "buildfromsource always" >> $bundleinstall/etc/macports/macports.conf
+    # Activate step failed due to bsdtar problem 
+    echo "hfscompression no"  >> $bundleinstall/etc/macports/macports.conf
 fi
 
 # Install the packages for pspp
@@ -95,7 +100,7 @@ if test $buildfromsource = "true"; then
     # Install the build dependencies for pspp
     port -N install pkgconfig texinfo makeicns cairo fontconfig freetype \
      gettext glib2 gsl libiconv libxml2 ncurses pango readline zlib atk \
-     gdk-pixbuf2 gtksourceview3 adwaita-icon-theme
+     gdk-pixbuf2 gtksourceview3 adwaita-icon-theme spread-sheet-widget
     # Retrieve and Set Version Info
     pushd $psppsource
     gitversion=`git log --pretty=format:"%h" -1`
@@ -106,10 +111,11 @@ if test $buildfromsource = "true"; then
     rm -rf ./build
     mkdir ./build
     pushd build
-    $psppsource/configure --prefix=$bundleinstall \
-                         LDFLAGS=-L$bundleinstalll/lib \
+    $psppsource/configure --disable-rpath \
+                          --prefix=$bundleinstall \
+                         LDFLAGS=-L$bundleinstall/lib \
                          CPPFLAGS=-I$bundleinstall/include \
-                         PKG_CONFIG_PATH=/Users/fritz/pspp/install/lib/pkgconfig \
+                         PKG_CONFIG_PATH=$bundleinstall/lib/pkgconfig \
                          --enable-relocatable
     make VERSION=$psppversion
     make html
@@ -134,16 +140,27 @@ makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
          -out pspp.icns
 # Set version information
 sed "s/0.10.1/$psppversion/g" Info-pspp.plist > Info-pspp-version.plist
+
+# Fix the rpath libraries such that gtc-mac-bundler can work
+# --disable-rpath does not work anymore after relocate.m4 was updated in gnulib
+install_name_tool -id $bundleinstall/lib/pspp/libpspp-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-$psppversion.dylib
+install_name_tool -id $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib
+install_name_tool -change @rpath/libpspp-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-$psppversion.dylib $bundleinstall/bin/psppire
+install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/bin/psppire
+
 # produce the pspp.app bundle in Desktop
 export PSPPINSTALL=$bundleinstall
 gtk-mac-bundler pspp.bundle
 
-# Fix the link issue for the relocatable binary in the app bundle
-# MacOS/pspp - the wrapper from gtk-mac-bundler calling
-# MacOS/pspp-bin - the wrapper from glibc relocatable calling pspp-bin.bin
-# but that is in the Resource directory
+# The relative path computation in the relocate code
+# assumes that the path structure remains identical in the
+# new install location. Therfore the binary must be in a bin
+# directory. Therefore I link to the binary in the bin directory
+# in the Resources directory
 pushd pspp.app/Contents/MacOS
-ln -s ../Resources/bin/psppire.bin ./pspp-bin.bin
+rm ./pspp-bin
+rm ./pspp
+ln -s ../Resources/bin/psppire ./pspp
 popd
 
 # Create the DMG for distribution
