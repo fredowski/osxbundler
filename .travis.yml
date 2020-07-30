@@ -3,6 +3,6 @@ os: osx
 env:
 - COLUMNS=78
 before_install:
-- ./prepare_travis.sh
+- ./prepare-travis.sh
 script:
 - ./makeosxbundle.sh
