@@ -3,6 +3,8 @@ os: osx
 env:
 - COLUMNS=78
 before_install:
+- mkdir -p /opt/macports
+- echo "Hallo" > /opt/macports/test
 - ./prepare-travis.sh
 script:
 - ./makeosxbundle.sh
