@@ -3,7 +3,10 @@ os: osx
 env:
 - COLUMNS=78
 before_install:
-- mkdir -p /opt/macports
+- sudo mkdir -p /opt/macports
+- echo $USER
+- ls -la .
+- sudo chown $USER:staff /opt/macports
 - echo "Hallo" > /opt/macports/test
 - ./prepare-travis.sh
 script:
