@@ -18,5 +18,5 @@ done
 # Download and install the macports build environment for pspp
 pushd /opt/macports
 curl -o macports.tgz https://www.hs-augsburg.de/homes/beckmanf/pspp/macports-pspp.tgz
-tar -xvzf macports.tgz
+tar -xzf macports.tgz
 popd
