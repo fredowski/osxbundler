@@ -33,6 +33,7 @@ tar -xzf ssw.tgz
 pushd spread-sheet-widget-$sswversion
 ./configure --prefix=$bundleinstall
 make install
+popd
 
 #Download pspp git repository
 git clone --depth 2 https://git.savannah.gnu.org/git/pspp.git
