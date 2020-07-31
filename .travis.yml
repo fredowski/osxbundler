@@ -4,10 +4,7 @@ env:
 - COLUMNS=78
 before_install:
 - sudo mkdir -p /opt/macports
-- echo $USER
-- ls -la .
 - sudo chown $USER:staff /opt/macports
-- echo "Hallo" > /opt/macports/test
 - ./prepare-travis.sh
 script:
-- ./makeosxbundle.sh
+- ./buildpspp.sh
