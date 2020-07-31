@@ -7,5 +7,6 @@ before_install:
 - sudo mkdir -p /opt/macports
 - sudo chown $USER:staff /opt/macports
 - ./prepare-travis.sh
+- ./install-build-env.sh
 script:
 - ./buildpspp.sh
