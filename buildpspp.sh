@@ -26,6 +26,14 @@ pushd gnulib
 git checkout 1e972a8a37c153ddc15e604592f84f939eb3c2ad
 popd
 
+#Download and install spread-sheet-widget
+sswversion=0.6
+curl -o ssw.tgz http://alpha.gnu.org/gnu/ssw/spread-sheet-widget-$sswversion.tar.gz
+tar -xzf ssw.tgz
+pushd spread-sheet-widget-$sswversion
+./configure --prefix=$bundleinstall
+make install
+
 #Download pspp git repository
 git clone --depth 2 https://git.savannah.gnu.org/git/pspp.git
 
@@ -33,9 +41,7 @@ pushd pspp
 make -f Smake
 popd
 
-
-# The source tree for pspp is here. This is only required if you
-# build with option --git
+# The source tree for pspp is here.
 psppsource=`pwd`/pspp
 
 # Check if we are on MacOS
@@ -61,8 +67,6 @@ if ! test -f ./Info-pspp.plist; then
     exit
 fi
 
-
-# Install the packages for pspp
 
     # Retrieve and Set Version Info
     pushd $psppsource
