@@ -11,6 +11,9 @@ before_install:
 script:
   - echo "small test dmg" > pspp-1.3.0-g12345678.dmg
 # - ./buildpspp.sh
+before_deploy:
+  - export DMGNAME `ls *.dmg`
+  - sed -i "" "s/DMGNAME/$DMGNAME/g" bintray.json
 deploy:
   provider: bintray
   edge: true

@@ -19,7 +19,7 @@
     },
 
     "files":
-        [{ "includePattern": "(.*)\.dmg", "uploadPattern": "$1.dmg",
+        [{ "includePattern": "DMGNAME", "uploadPattern": "pspp-macos-bundle-nightly.dmg",
             "matrixParams": { "override": 1 }
         }],
     "publish": true
