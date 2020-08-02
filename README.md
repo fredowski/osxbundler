@@ -2,6 +2,7 @@ osxbundler
 =======
 
 [![Build Status](https://travis-ci.org/fredowski/osxbundler.svg?branch=master)](https://travis-ci.org/fredowski/osxbundler)
+[ ![Download](https://api.bintray.com/packages/fredowski/pspp/pspp-macos-install-bundle/images/download.svg?version=nightly) ](https://bintray.com/fredowski/pspp/pspp-macos-install-bundle/nightly/link)
 
 Create a pspp application bundle (dmg) for MacOS. Bundles are available here
 
