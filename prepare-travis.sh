@@ -7,8 +7,8 @@
 # or any later option
 
 # Uninstall Homebrew
-brew --version
-/usr/bin/sudo /usr/bin/find /usr/local -mindepth 2 -delete && hash -r
+#brew --version
+#/usr/bin/sudo /usr/bin/find /usr/local -mindepth 2 -delete && hash -r
 
 # Guard against intermittent Travis CI DNS outages
 for host in www.hs-augsburg.de distfiles.macports.org dl.bintray.com github.com packages.macports.org packages-private.macports.org rsync-origin.macports.org; do
