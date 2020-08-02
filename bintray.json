@@ -19,7 +19,7 @@
     },
 
     "files":
-        [{ "includePattern": "*.dmg", "uploadPattern": "$1.dmg",
+        [{ "includePattern": "(.*).dmg", "uploadPattern": "$1.dmg",
             "matrixParams": { "override": 1 }
         }],
     "publish": true
