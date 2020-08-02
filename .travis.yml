@@ -6,7 +6,15 @@ env:
 before_install:
 - sudo mkdir -p /opt/macports
 - sudo chown $USER:staff /opt/macports
-- ./prepare-travis.sh
-- ./install-build-env.sh
+# - ./prepare-travis.sh
+# - ./install-build-env.sh
 script:
-- ./buildpspp.sh
+  - echo "small test dmg" > pspp-1.3.0-g12345678.dmg
+# - ./buildpspp.sh
+deploy:
+  provider: bintray
+  file: "bintray.json"
+  user: fredowski
+  skip_cleanup: true
+  key:
+    secure: "G+Uzjh57sO+nBG1zpRZO/MdrqqrtuZ9u7A0YirLfaBJslAM3U4m+xsTHcTfyl6P3IA2HGWzOdVCtcpcLUpYKFRB0/FlrgDRGb5QYrf5g99WT0XLlKPDoVl09t1hlBtfoY9jvQxVkUEfrok6XaSd13OgvG32gkok2BI1OlvM9bMaI7th47tXAPOIqqr8uBy7s0Sfc2M1+raWFvKQpTAxZ4hgYFKSth3zCFa9BDl7szsFFdOrPO53SR5Anz9q+WMDaTdOPxE46+/8X/YzKw9u3phfBNPUcpMcMzuyTOYYHDVSt6EIOz0nbw/wpC8dZU2WhtXZuAyvXonOSWOqZgSbyVCPM7dfDsFVwM3HKl3TJNuUkUTx70UzkqIKYnx8VJlyvGf7ABRj7kuqEPuJxPt+qJHWd/hstM6r5PKgdtRsva+SMVmT0Tma0a+XTp1My/s4v7OwP405Q4TjIEgHkl7tOprTCREtXY/B0UtKK5jfy3iqlIUIRJ1gAZ8SmGiBg6lMAZcj9alas9KxC3bGkxAHzPUMzLfetCO1RDseFeBEVs6hzn2UGOSKr0sVdWxhLYSVpMTUH7ID2dKVsaOn3phfif6qgMhSWgO1NoO5aUuSwIK4sANcUAuxc2lnlRaS7o2Fxt/YFvjMmJdanvHgzGu9DFm9nYVMtR/57se6wcIxv8qw="
