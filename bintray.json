@@ -19,7 +19,7 @@
     },
 
     "files":
-        [{ "includePattern": "(.*).dmg", "uploadPattern": "$1.dmg",
+        [{ "includePattern": "pspp-1.3.0-g12345678.dmg", "uploadPattern": "pspp-1.3.0-g12345678.dmg",
             "matrixParams": { "override": 1 }
         }],
     "publish": true
