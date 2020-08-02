@@ -2,7 +2,7 @@
     "package": {
         "name": "pspp-macos-install-bundle",
         "repo": "pspp",
-        "subject": "pspp macos bundle build bot",
+        "subject": "fredowski",
         "desc": "Nightly build of the pspp mac install bundle",
         "website_url": "https://www.gnu.org/software/pspp/",
         "vcs_url": "http://git.savannah.gnu.org/cgit/pspp.git",

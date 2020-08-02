@@ -13,6 +13,7 @@ script:
 # - ./buildpspp.sh
 deploy:
   provider: bintray
+  edge: true
   file: "bintray.json"
   user: fredowski
   skip_cleanup: true
