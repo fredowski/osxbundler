@@ -21,7 +21,7 @@ fi
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 #Download gnulib
-gnulibver=1e972a8a37c153ddc15e604592f84f939eb3c2ad
+gnulibver=d6dabe8eece3a9c1269dc1c084531ce447c7a42e
 curl -o gnulib.zip https://codeload.github.com/coreutils/gnulib/zip/$gnulibver
 unzip -q gnulib.zip
 rm gnulib.zip
