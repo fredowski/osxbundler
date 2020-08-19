@@ -4,7 +4,7 @@
 # Released under GNU General Public License, either version 3
 # or any later option
 
-macportstarfile=macports-1.3.0-1.tgz
+macportstarfile=macports-1.5.0-1.tgz
 
 # Download and install the macports build environment for pspp
 pushd /opt/macports
@@ -13,9 +13,9 @@ tar -xzf $macportstarfile
 
 cd macports-ports
 # Github https repo to avoid ssh auth problems
-#git remote add github https://github.com/fredowski/macports-ports
+git remote add github https://github.com/fredowski/macports-ports
 #git pull pspp-old
-git checkout pspp-old
-git pull
+git checkout pspp
+git pull github pspp
 #git checkout pspp/1.3.0-1
 popd
