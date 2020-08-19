@@ -10,6 +10,7 @@
 # and as pspp configure prefix.
 
 bundleinstall=/opt/macports/install
+export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -39,8 +40,6 @@ if ! test -f ./Info-pspp.plist; then
     echo "Info-pspp.plist is missing"
     exit 1
 fi
-
-export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 buildfromsource=true
 if test $# = 1 && test $1 = "--release"; then
@@ -97,6 +96,9 @@ if test $buildfromsource = "true"; then
     make install-html
     popd
 else
+    port -v selfupdate
+    port upgrade outdated || true
+    port -N install git
     # Install the pspp package from macports
     echo "Installing pspp from macports package"
     port -N install pspp +reloc +doc
