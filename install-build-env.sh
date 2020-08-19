@@ -17,5 +17,5 @@ cd macports-ports
 #git pull pspp-old
 git checkout pspp-old
 git pull
-git checkout pspp/1.3.0-1
+#git checkout pspp/1.3.0-1
 popd
