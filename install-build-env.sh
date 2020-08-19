@@ -12,6 +12,8 @@ curl -o $macportstarfile https://www.hs-augsburg.de/homes/beckmanf/pspp/$macport
 tar -xzf $macportstarfile
 
 cd macports-ports
-git pull
+# Github https repo to avoid ssh auth problems
+git remote add github https://github.com/fredowski/macports-ports
+git pull github
 git checkout pspp/1.3.0-1
 popd
