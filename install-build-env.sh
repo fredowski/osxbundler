@@ -14,6 +14,8 @@ tar -xzf $macportstarfile
 cd macports-ports
 # Github https repo to avoid ssh auth problems
 #git remote add github https://github.com/fredowski/macports-ports
-#git pull github pspp-old
+#git pull pspp-old
+git checkout pspp-old
+git pull
 git checkout pspp/1.3.0-1
 popd
