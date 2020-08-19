@@ -2,9 +2,11 @@ language: c
 os: osx
 compiler: clang
 env:
-- COLUMNS=78
-- BUILDTARGET="--release"
-- BUILDTARGET="--git"
+  global:
+    - COLUMNS=78
+  jobs:
+    - BUILDTARGET="--release"
+    - BUILDTARGET="--git"
 before_install:
   - sudo mkdir -p /opt/macports
   - sudo chown $USER:staff /opt/macports
