@@ -17,6 +17,6 @@ git remote rm origin
 git remote add origin https://github.com/fredowski/macports-ports
 #git pull pspp-old
 git checkout pspp
-git pull pspp
+git pull
 #git checkout pspp/1.3.0-1
 popd
