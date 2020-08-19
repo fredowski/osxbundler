@@ -1,6 +1,6 @@
-#!/bin/sh -xve
+#!/bin/bash -xve
 
-# Build pspp from git
+# Build pspp from git or from macports
 
 # Copyright (C) 2020 Free Software Foundation, Inc.
 # Released under GNU General Public License, either version 3
@@ -9,68 +9,71 @@
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
 
-
 bundleinstall=/opt/macports/install
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
     echo "Macports install directory $bundleinstall is missing - exiting"
-    exit
+    exit 1
 fi
-
-export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
-
-#Download gnulib
-gnulibver=d6dabe8eece3a9c1269dc1c084531ce447c7a42e
-curl -o gnulib.zip https://codeload.github.com/coreutils/gnulib/zip/$gnulibver
-unzip -q gnulib.zip
-rm gnulib.zip
-mv gnulib-$gnulibver gnulib
-
-
-#Download and install spread-sheet-widget
-sswversion=0.6
-curl -o ssw.tgz http://alpha.gnu.org/gnu/ssw/spread-sheet-widget-$sswversion.tar.gz
-tar -xzf ssw.tgz
-pushd spread-sheet-widget-$sswversion
-./configure --prefix=$bundleinstall
-make install
-popd
-
-#Download pspp git repository
-git clone --depth 2 https://git.savannah.gnu.org/git/pspp.git
-
-pushd pspp
-make -f Smake
-popd
-
-# The source tree for pspp is here.
-psppsource=`pwd`/pspp
 
 # Check if we are on MacOS
 if ! test `uname` = "Darwin"; then
     echo "This only works on MacOS"
-    exit
+    exit 1
 fi
 
 # Check if XCode is installed - Assume clang indicates xcode.
 if ! test -f /usr/bin/clang; then
     echo "/usr/bin/clang not found - please install XCode CLT"
-    exit
+    exit 1
 fi
 
 # Check the required configuration files
 if ! test -f ./pspp.bundle; then
     echo "pspp.bundle is missing"
-    exit
+    exit 1
 fi
 
 if ! test -f ./Info-pspp.plist; then
     echo "Info-pspp.plist is missing"
-    exit
+    exit 1
 fi
 
+export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
+buildfromsource=true
+if test $# = 1 && test $1 = "--release"; then
+    echo "Building pspp from macports pspp port"
+    buildfromsource=false
+fi
+
+if test $buildfromsource = "true"; then
+    #Download gnulib
+    gnulibver=d6dabe8eece3a9c1269dc1c084531ce447c7a42e
+    curl -o gnulib.zip https://codeload.github.com/coreutils/gnulib/zip/$gnulibver
+    unzip -q gnulib.zip
+    rm gnulib.zip
+    mv gnulib-$gnulibver gnulib
+
+    #Download and install spread-sheet-widget
+    sswversion=0.6
+    curl -o ssw.tgz http://alpha.gnu.org/gnu/ssw/spread-sheet-widget-$sswversion.tar.gz
+    tar -xzf ssw.tgz
+    pushd spread-sheet-widget-$sswversion
+    ./configure --prefix=$bundleinstall
+    make install
+    popd
+
+    #Download pspp git repository
+    git clone --depth 2 https://git.savannah.gnu.org/git/pspp.git
+
+    pushd pspp
+    make -f Smake
+    popd
+
+    # The source tree for pspp is here.
+    psppsource=`pwd`/pspp
     # Retrieve and Set Version Info
     pushd $psppsource
     gitversion=`git log --pretty=format:"%h" -1`
@@ -93,6 +96,13 @@ fi
     make install
     make install-html
     popd
+else
+    # Install the pspp package from macports
+    echo "Installing pspp from macports package"
+    port -N install pspp +reloc +doc
+    # Update the version information
+    psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
+fi
 
 # Create the icns file
 makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
