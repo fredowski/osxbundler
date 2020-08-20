@@ -22,6 +22,7 @@ git branch --set-upstream-to=origin/pspp pspp
 git branch --set-upstream-to=origin/master master
 git pull
 
+# Replace username fritz
 cd /opt/macports/install/share/macports/install
 /usr/bin/sed -i '' 's/fritz/travis/g' prefix.mtree
 /usr/bin/sed -i '' 's/fritz/travis/g' base.mtree

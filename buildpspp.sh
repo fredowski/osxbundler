@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash -xve
 
 # Build pspp from git or from macports
 
@@ -98,10 +98,6 @@ if test $buildfromsource = "true"; then
 else
     port -v selfupdate
     port upgrade outdated || true
-    port -N install git
-    cat /opt/macports/install/var/macports/logs/_opt_macports_macports-ports_perl_p5-digest-sha1/p5.28-digest-sha1/main.log
-    wait 10
-    exit 1
     # Install the pspp package from macports
     echo "Installing pspp from macports package"
     port -N install pspp +reloc +doc
