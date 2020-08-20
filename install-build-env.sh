@@ -22,5 +22,10 @@ git branch --set-upstream-to=origin/pspp pspp
 git branch --set-upstream-to=origin/master master
 git pull
 
+ls -la /opt/macports
+ls -la /opt/macports/install
+ls -la /opt/macports/macports-ports
+
+
 #git checkout pspp/1.3.0-1
 popd
