@@ -26,6 +26,7 @@ git pull
 cd /opt/macports/install/share/macports/install
 /usr/bin/sed -i '' 's/fritz/travis/g' prefix.mtree
 /usr/bin/sed -i '' 's/fritz/travis/g' base.mtree
+/usr/bin/sed -i '' 's/fritz/travis/g' /opt/macports/install/libexec/macports/lib/port1.0/port_autoconf.tcl
 
 ls -la /opt/macports
 ls -la /opt/macports/install
