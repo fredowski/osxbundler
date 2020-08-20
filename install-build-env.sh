@@ -6,6 +6,8 @@
 
 macportstarfile=macports-1.5.0-1.tgz
 
+bundleinstall=/opt/macports/install
+
 # Download and install the macports build environment for pspp
 pushd /opt/macports
 curl -o $macportstarfile https://www.hs-augsburg.de/homes/beckmanf/pspp/$macportstarfile
@@ -23,16 +25,13 @@ git branch --set-upstream-to=origin/master master
 git pull
 
 # Replace username fritz
-cd /opt/macports/install/share/macports/install
-/usr/bin/sed -i '' 's/fritz/travis/g' prefix.mtree
-/usr/bin/sed -i '' 's/fritz/travis/g' base.mtree
-/usr/bin/sed -i '' 's/fritz/travis/g' /opt/macports/install/libexec/macports/lib/port1.0/port_autoconf.tcl
+/usr/bin/sed -i '' 's/fritz/travis/g' $bundleinstall/share/macports/install/prefix.mtree
+/usr/bin/sed -i '' 's/fritz/travis/g' $bundleinstall/share/macports/install/base.mtree
+/usr/bin/sed -i '' 's/fritz/travis/g' $bundleinstall/libexec/macports/lib/port1.0/port_autoconf.tcl
 
-ls -la /opt/macports
-ls -la /opt/macports/install
-ls -la /opt/macports/macports-ports
-
-
+# Use the latest macports environment (remove local repo)
+# Only relevant when port selfupdate and upgrade is done
+echo "rsync://rsync.macports.org/macports/release/tarballs/ports.tar [default]" > $bundleinstall/etc/macports/sources.conf
 
 #git checkout pspp/1.3.0-1
 popd
