@@ -22,9 +22,14 @@ git branch --set-upstream-to=origin/pspp pspp
 git branch --set-upstream-to=origin/master master
 git pull
 
+cd /opt/macports/install/share/macports/install
+/usr/bin/sed -i '' 's/fritz/travis/g' prefix.mtree
+/usr/bin/sed -i '' 's/fritz/travis/g' base.mtree
+
 ls -la /opt/macports
 ls -la /opt/macports/install
 ls -la /opt/macports/macports-ports
+
 
 
 #git checkout pspp/1.3.0-1
