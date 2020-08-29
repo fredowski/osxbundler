@@ -31,7 +31,7 @@ git pull
 
 # Use the latest macports environment (remove local repo)
 # Only relevant when port selfupdate and upgrade is done
-echo "rsync://rsync.macports.org/macports/release/tarballs/ports.tar [default]" > $bundleinstall/etc/macports/sources.conf
+# echo "rsync://rsync.macports.org/macports/release/tarballs/ports.tar [default]" > $bundleinstall/etc/macports/sources.conf
 
 #git checkout pspp/1.3.0-1
 popd
