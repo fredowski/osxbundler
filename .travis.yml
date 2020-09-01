@@ -4,6 +4,7 @@ compiler: clang
 env:
   global:
     - COLUMNS=78
+    - MACOSX_DEPLOYMENT_TARGET=10.8
   jobs:
 #    - BUILDTARGET="--release"
     - BUILDTARGET="--git"
