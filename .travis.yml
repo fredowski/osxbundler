@@ -5,7 +5,7 @@ env:
   global:
     - COLUMNS=78
   jobs:
-    - BUILDTARGET="--release"
+#    - BUILDTARGET="--release"
     - BUILDTARGET="--git"
 before_install:
   - sudo mkdir -p /opt/macports

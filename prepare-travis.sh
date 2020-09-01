@@ -1,4 +1,4 @@
-#!/bin/sh -xve
+#!/bin/bash -xve
 
 # Prepare the environment on travis
 
@@ -10,7 +10,11 @@
 #brew --version
 #/usr/bin/sudo /usr/bin/find /usr/local -mindepth 2 -delete && hash -r
 
+ourhosts="alpha.gnu.org git.savannah.gnu.org www.hs-augsburg.de distfiles.macports.org \
+  dl.bintray.com github.com packages.macports.org \
+  packages-private.macports.org rsync-origin.macports.org"
+
 # Guard against intermittent Travis CI DNS outages
-for host in www.hs-augsburg.de distfiles.macports.org dl.bintray.com github.com packages.macports.org packages-private.macports.org rsync-origin.macports.org; do
+for host in $ourhosts ; do
     dig +short "$host" | sed -n '$s/$/ '"$host/p" | sudo tee -a /etc/hosts >/dev/null
 done
