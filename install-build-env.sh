@@ -11,7 +11,7 @@ bundleinstall=/opt/macports/install
 # Download and install the macports build environment for pspp
 pushd /opt/macports
 #curl -o $macportstarfile https://www.hs-augsburg.de/homes/beckmanf/pspp/$macportstarfile
-curl -o $macportstarfile https://caeis.etech.fh-augsburg.de/downloads/$macportstarfile
+curl -o $macportstarfile https://caeis.etech.fh-augsburg.de/downloads/devel/$macportstarfile
 tar -xzf $macportstarfile
 
 #cd macports-ports
