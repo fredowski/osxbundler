@@ -9,7 +9,10 @@ import re
 import os
 import sys
 
-quiet = re.match('--quiet',sys.argv[1])
+quiet=False
+
+if len(sys.argv)==2:
+  quiet = re.match('--quiet',sys.argv[1])
 
 def otool(s):
     o = subprocess.Popen(['/usr/bin/otool', '-L', s], stdout=subprocess.PIPE)
@@ -37,6 +40,12 @@ def searchlibs(a):
 
 libs = searchlibs(pspp)
 
+if not(quiet):
+  for l in libs:
+    print l
+    content=subprocess.check_output(["otool", "-L", l])
+    if re.search("libc\+\+", content):
+      print "Library: " + l + " links to libc++"
 
 installedports=[]
 content=subprocess.check_output(["port", "-q", "installed"])

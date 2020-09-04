@@ -106,10 +106,12 @@ coreports="atk brotli bzip2 cairo expat fontconfig freetype fribidi \
 
 # python38 does not build with deploymenttarget 10.7.
 # Not rebuilding python38 results in build failure with a different deployment
-# target for atk - I guess due to gobject-introspection
-echo "macosx_deployment_target 10.8" >> $bundleinstall/etc/macports/macports.conf
+# target for atk due to gobject-introspection
+echo "macosx_deployment_target 10.5" >> $bundleinstall/etc/macports/macports.conf
 port -N uninstall python38
 port -N install python38
+sed -i -e s/10.5/10.7/g $bundleinstall/etc/macports/macports.conf
+# Now build for 10.7
 for p in $coreports ; do
     port -N uninstall -f $p
     port -N install $p

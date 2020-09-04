@@ -8,9 +8,11 @@
 
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
-
 bundleinstall=/opt/macports/install
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+
+# bundleversion if the pspp release did not change but the build environment
+bundleversion=2
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -77,7 +79,7 @@ if test $buildfromsource = "true"; then
     pushd $psppsource
     gitversion=`git log --pretty=format:"%h" -1`
     repoversion=`sed -n 's/AC_INIT.*\[\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' configure.ac`
-    psppversion=$repoversion-g$gitversion
+    psppversion=$repoversion-g$gitversion-$bundleversion
     popd
     # Configure and build pspp
     rm -rf ./build
@@ -94,6 +96,7 @@ if test $buildfromsource = "true"; then
     make html
     make install
     make install-html
+    fullreleaseversion=$psppversion
     popd
 else
     port -v selfupdate
@@ -103,6 +106,7 @@ else
     port -N install pspp +reloc +doc
     # Update the version information
     psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
+    fullreleaseversion=$psppversion-$bundleversion
 fi
 
 # Create the icns file
@@ -111,7 +115,7 @@ makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
          -16  $bundleinstall/share/icons/hicolor/16x16/apps/pspp.png \
          -out pspp.icns
 # Set version information
-sed "s/0.10.1/$psppversion/g" Info-pspp.plist > Info-pspp-version.plist
+sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
 
 # Fix the rpath libraries such that gtc-mac-bundler can work
 # --disable-rpath does not work anymore after relocate.m4 was updated in gnulib
@@ -140,9 +144,9 @@ rm -rf /tmp/psppbundle
 mkdir /tmp/psppbundle
 mv ./pspp.app /tmp/psppbundle
 rm -rf pspp-*.dmg
-hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp-$psppversion.dmg
+hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp-$fullreleaseversion.dmg
 rm -rf /tmp/psppbundle
 rm -rf pspp.icns
 
-echo "Done! Your dmg file is pspp-$psppversion.dmg"
+echo "Done! Your dmg file is pspp-$fullreleaseversion.dmg"
 echo "You can remove the install directory: $bundleinstall"
