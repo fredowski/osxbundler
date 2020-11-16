@@ -4,7 +4,7 @@
 # Released under GNU General Public License, either version 3
 # or any later option
 
-macportstarfile=macports-1.5.0-2.tgz
+macportstarfile=macports-1.5.0-3.tgz
 
 bundleinstall=/opt/macports/install
 

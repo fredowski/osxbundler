@@ -92,7 +92,7 @@ buildports="pkgconfig texinfo makeicns cairo fontconfig freetype \
   gettext glib2 gsl libiconv libxml2 ncurses readline zlib atk \
   gtksourceview3 gtk3 adwaita-icon-theme spread-sheet-widget \
   automake autoconf gperf m4 \
-  gimp gtk-mac-bundler"
+  gimp gtk-mac-bundler coreutils"
 
 port -N install $buildports
 
@@ -108,7 +108,7 @@ coreports="atk brotli bzip2 cairo expat fontconfig freetype fribidi \
 # Not rebuilding python38 results in build failure with a different deployment
 # target for atk due to gobject-introspection
 echo "macosx_deployment_target 10.5" >> $bundleinstall/etc/macports/macports.conf
-port -N uninstall python38
+port -Nf uninstall python38
 port -N install python38
 sed -i -e s/10.5/10.7/g $bundleinstall/etc/macports/macports.conf
 # Now build for 10.7
@@ -131,9 +131,12 @@ done
 # Remove install files
 port clean --all installed
 
+# Remove macports files
+rm -rf $bundleinstall/var/macports
+
 # Create a tar file of the install directory
 pushd $topdir
-tar -cvzf macports-pspp.tgz ./install
+tar -czf macports-pspp.tgz ./install
 popd
 
 echo `date`
