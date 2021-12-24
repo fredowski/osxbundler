@@ -1,6 +1,6 @@
 # Build the pspp MacOS install bundle
 
-name: pspp MacOS bundle 
+name: psppbundle
 
 # Controls when the action will run. 
 on:
