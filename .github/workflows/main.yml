@@ -1,0 +1,42 @@
+# Build the pspp MacOS install bundle
+
+name: pspp MacOS bundle 
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  schedule:
+    - cron: '13 4 * * *'
+
+jobs:
+  # The build job will install the prebuild macports build environment and build the bundle
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pspp_build_opts: ["--release","--git"]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Download prebuild macports build environment
+        run: |
+          sudo mkdir /opt/macports
+          sudo chown $USER:staff /opt/macports
+          ./install-build-env.sh
+
+      - name: Build pspp 
+        env:
+          PSPP_BUILD_OPTS: ${{ matrix.pspp_build_opts }}
+        run: ./buildpspp.sh $PSPP_BUILD_OPTS
