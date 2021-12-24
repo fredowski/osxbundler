@@ -38,7 +38,7 @@ else
     rm -rf /tmp/macports
     mkdir /tmp/macports
     pushd /tmp/macports
-    macportsversion=2.6.3
+    macportsversion=2.7.1
     curl https://distfiles.macports.org/MacPorts/MacPorts-$macportsversion.tar.gz -O
     tar xvzf Macports-$macportsversion.tar.gz
     cd Macports-$macportsversion
@@ -83,10 +83,10 @@ port upgrade outdated || true
 # libgcc10 requires to deactivate unwind-header - so build first
 # otherwise the build stops and libunwind-headers has to be
 # deactivated
-port -N install cctools
-port -N deactivate libunwind-headers
-port -N install libgcc10
-port -N unsetrequested cctools libgcc10
+#port -N install cctools
+#port -N deactivate libunwind-headers
+#port -N install libgcc10
+#port -N unsetrequested cctools libgcc10
 
 buildports="pkgconfig texinfo makeicns cairo fontconfig freetype \
   gettext glib2 gsl libiconv libxml2 ncurses readline zlib atk \
@@ -104,14 +104,13 @@ coreports="atk brotli bzip2 cairo expat fontconfig freetype fribidi \
   harfbuzz icu libepoxy libffi libiconv libpixman libpng libxml2 ncurses \
   ossp-uuid pango pcre readline spread-sheet-widget xz zlib"
 
-# python38 does not build with deploymenttarget 10.7.
 # Not rebuilding python38 results in build failure with a different deployment
 # target for atk due to gobject-introspection
-echo "macosx_deployment_target 10.5" >> $bundleinstall/etc/macports/macports.conf
+echo "macosx_deployment_target 10.13" >> $bundleinstall/etc/macports/macports.conf
 port -Nf uninstall python38
 port -N install python38
-sed -i -e s/10.5/10.7/g $bundleinstall/etc/macports/macports.conf
-# Now build for 10.7
+#sed -i -e s/10.5/10.7/g $bundleinstall/etc/macports/macports.conf
+# Now build for 10.13
 for p in $coreports ; do
     port -N uninstall -f $p
     port -N install $p

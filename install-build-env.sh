@@ -1,10 +1,10 @@
 #!/bin/sh -xve
 
-# Copyright (C) 2020 Free Software Foundation, Inc.
+# Copyright (C) 2020,2021 Free Software Foundation, Inc.
 # Released under GNU General Public License, either version 3
 # or any later option
 
-macportstarfile=macports-1.5.0-3.tgz
+macportstarfile=macports-1.5.0-4.tgz
 
 bundleinstall=/opt/macports/install
 
