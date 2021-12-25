@@ -46,12 +46,12 @@ fi
 buildsource="git"
 if test $# = 1; then
     if test $1 = "--release"; then
-	echo "Building pspp from macports pspp port"
-	buildsource="release"
+        echo "Building pspp from macports pspp port"
+        buildsource="release"
     fi
     if test $1 = "--nightly"; then
-	echo "Building pspp from Bens nightly package"
-	buildsource="nightly"
+        echo "Building pspp from Bens nightly package"
+        buildsource="nightly"
     fi
 fi
 
@@ -117,8 +117,8 @@ case $buildsource in
   "nightly")
       curl -o pspp.tgz "https://benpfaff.org/~blp/pspp-master/latest-source.tar.gz"
       tar -xzf pspp.tgz
-      psppversion=`ls -d pspp-*`
-      psppsource=`pwd`/$psppversion
+      psppversion=`ls -d pspp-* | sed -n 's/pspp-\(.*\)/\1/p'`
+      psppsource=`pwd`/pspp-$psppversion
       mkdir ./build
       pushd build
       $psppsource/configure --disable-rpath \
@@ -164,6 +164,14 @@ pushd pspp.app/Contents/MacOS
 rm ./pspp-bin
 rm ./pspp
 ln -s ../Resources/bin/psppire ./pspp
+popd
+
+# MacOS Monterey seems to evaluate @executable_path to Contents/Resources/bin while
+# it evaluates to Contents/MacOS on previous version. Then libraries are not found
+# See bug: https://savannah.gnu.org/bugs/?61452
+# Add an additional symbolic link such that both versions will find the libraries
+pushd pspp.app/Contents/Resources
+ln -s .. Resources
 popd
 
 # Create the DMG for distribution
