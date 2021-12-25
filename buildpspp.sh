@@ -132,7 +132,8 @@ case $buildsource in
       make html
       make install
       make install-html
-      fullreleaseversion=$psppversion-$bundleversion;;
+      fullreleaseversion=$psppversion-$bundleversion
+      popd;;
 esac
 
 # Create the icns file
