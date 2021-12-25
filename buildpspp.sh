@@ -12,7 +12,7 @@ bundleinstall=/opt/macports/install
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=2
+bundleversion=1
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -43,13 +43,20 @@ if ! test -f ./Info-pspp.plist; then
     exit 1
 fi
 
-buildfromsource=true
-if test $# = 1 && test $1 = "--release"; then
-    echo "Building pspp from macports pspp port"
-    buildfromsource=false
+buildsource="git"
+if test $# = 1; then
+    if test $1 = "--release"; then
+	echo "Building pspp from macports pspp port"
+	buildsource="release"
+    fi
+    if test $1 = "--nightly"; then
+	echo "Building pspp from Bens nightly package"
+	buildsource="nightly"
+    fi
 fi
 
-if test $buildfromsource = "true"; then
+case $buildsource in
+  "git")
     #Download gnulib
     gnulibver=0edaafc813caff4101c58405c6ab279597afc0b9
     curl -o gnulib.zip https://codeload.github.com/coreutils/gnulib/zip/$gnulibver
@@ -97,8 +104,8 @@ if test $buildfromsource = "true"; then
     make install
     make install-html
     fullreleaseversion=$psppversion
-    popd
-else
+    popd;;
+  "release")
     port -v selfupdate
     port upgrade outdated || true
     # Install the pspp package from macports
@@ -106,8 +113,27 @@ else
     port -N install pspp +reloc +doc
     # Update the version information
     psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
-    fullreleaseversion=$psppversion-$bundleversion
-fi
+    fullreleaseversion=$psppversion-$bundleversion;;
+  "nightly")
+      curl -o pspp.tgz "https://benpfaff.org/~blp/pspp-master/latest-source.tar.gz"
+      tar -xzf pspp.tgz
+      psppversion=`ls -d pspp-*`
+      psppsource=`pwd`/$psppversion
+      mkdir ./build
+      pushd build
+      $psppsource/configure --disable-rpath \
+                            --prefix=$bundleinstall \
+                         LDFLAGS=-L$bundleinstall/lib \
+                         CPPFLAGS=-I$bundleinstall/include \
+                         PKG_CONFIG_PATH=$bundleinstall/lib/pkgconfig \
+                         --enable-relocatable
+      make -j4
+      make check
+      make html
+      make install
+      make install-html
+      fullreleaseversion=$psppversion-$bundleversion;;
+esac
 
 # Create the icns file
 makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
