@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 mpinstdir="/opt/macports/install"
-pspp='/Users/fritz/pspp/install/bin/psppire'
+pspp='/opt/macports/install/bin/psppire'
 
 import subprocess
 import glob

@@ -88,8 +88,8 @@ port upgrade outdated || true
 #port -N install libgcc10
 #port -N unsetrequested cctools libgcc10
 
-buildports="pkgconfig texinfo makeicns cairo fontconfig freetype \
-  gettext glib2 gsl libiconv libxml2 ncurses readline zlib atk \
+buildports="pkgconfig texinfo makeicns cairo appstream-glib fontconfig freetype \
+  gettext glib2 gsl libiconv libxml2 ncurses pango readline zlib atk \
   gtksourceview3 gtk3 adwaita-icon-theme spread-sheet-widget \
   automake autoconf gperf m4 \
   gimp gtk-mac-bundler coreutils"
@@ -109,7 +109,6 @@ coreports="atk brotli bzip2 cairo expat fontconfig freetype fribidi \
 echo "macosx_deployment_target 10.13" >> $bundleinstall/etc/macports/macports.conf
 port -Nf uninstall python38
 port -N install python38
-#sed -i -e s/10.5/10.7/g $bundleinstall/etc/macports/macports.conf
 # Now build for 10.13
 for p in $coreports ; do
     port -N uninstall -f $p
@@ -130,8 +129,10 @@ done
 # Remove install files
 port clean --all installed
 
-# Remove macports files
-rm -rf $bundleinstall/var/macports
+# Cleanup macports further
+rm -rf $bundleinstall/var/macports/distfiles
+rm -rf $bundleinstall/var/macports/software
+rm -rf $bundleinstall/var/macports/sources
 
 # Create a tar file of the install directory
 pushd $topdir
