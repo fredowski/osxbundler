@@ -8,7 +8,7 @@
 
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
-bundleinstall=/usr/local/homebrew
+bundleinstall=`brew --repository`
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment

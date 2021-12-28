@@ -40,6 +40,7 @@ jobs:
         run: |
           cd gtk-mac-bundler
           make bindir=/usr/local/bin install
+          brew install makeicns
           brew tap fredowski/pspp
 
       - name: Build pspp 
@@ -47,3 +48,9 @@ jobs:
           PSPP_BUILD_OPTS: ${{ matrix.pspp_build_opts }}
         run: |
           ./buildpspp.sh $PSPP_BUILD_OPTS
+
+      - name: Archive the pspp bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: pspp MacOS bundle
+          path: pspp-1.4.1-1.dmg
