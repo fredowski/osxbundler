@@ -8,7 +8,7 @@
 
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
-bundleinstall=/opt/macports/install
+bundleinstall=/usr/local/homebrew
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
@@ -16,7 +16,7 @@ bundleversion=1
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
-    echo "Macports install directory $bundleinstall is missing - exiting"
+    echo "Homebrew install directory $bundleinstall is missing - exiting"
     exit 1
 fi
 
@@ -43,7 +43,7 @@ if ! test -f ./Info-pspp.plist; then
     exit 1
 fi
 
-buildsource="git"
+buildsource="brew"
 if test $# = 1; then
     if test $1 = "--release"; then
         echo "Building pspp from macports pspp port"
@@ -134,7 +134,13 @@ case $buildsource in
       make install-html
       fullreleaseversion=$psppversion-$bundleversion
       popd;;
+  "brew")
+      psppversion=`brew info pspp | sed -n 's/.* stable \([0-9]\.[0-9]\.[0-9]\).*/\1/p'`
+      fullreleaseversion=$psppversion-$bundleversion
+      brew install --verbose --with-relocation pspp
 esac
+#psppversion="1.5.3"
+#fullreleaseversion="1.5.3-1"
 
 # Create the icns file
 makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
@@ -155,23 +161,11 @@ install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/
 export PSPPINSTALL=$bundleinstall
 gtk-mac-bundler pspp.bundle
 
-# The relative path computation in the relocate code
-# assumes that the path structure remains identical in the
-# new install location. Therfore the binary must be in a bin
-# directory. Therefore I link to the binary in the bin directory
-# in the Resources directory
+# The application will be called in Contents/MacOS/pspp
+# That is a launcher script that will call
+# Contents/Resources/bin/psppire
 pushd pspp.app/Contents/MacOS
 rm ./pspp-bin
-rm ./pspp
-ln -s ../Resources/bin/psppire ./pspp
-popd
-
-# MacOS Monterey seems to evaluate @executable_path to Contents/Resources/bin while
-# it evaluates to Contents/MacOS on previous version. Then libraries are not found
-# See bug: https://savannah.gnu.org/bugs/?61452
-# Add an additional symbolic link such that both versions will find the libraries
-pushd pspp.app/Contents/Resources
-ln -s .. Resources
 popd
 
 # Create the DMG for distribution

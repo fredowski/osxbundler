@@ -23,20 +23,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pspp_build_opts: ["--nightly"]
+        pspp_build_opts: ["--brew"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Download prebuild macports build environment
+      - uses: actions/checkout@v2
+        with:
+          repository: fredowski/gtk-mac-bundler
+          ref: homebrew
+          path: gtk-mac-bundler
+
+      - name: Install build environment
         run: |
-          sudo mkdir /opt/macports
-          sudo chown $USER:staff /opt/macports
-          ./install-build-env.sh
+          cd gtk-mac-bundler
+          make bindir=/usr/local/bin install
+          brew tap fredowski/pspp
 
       - name: Build pspp 
         env:
           PSPP_BUILD_OPTS: ${{ matrix.pspp_build_opts }}
-        run: ./buildpspp.sh $PSPP_BUILD_OPTS
+        run: |
+          ./buildpspp.sh $PSPP_BUILD_OPTS

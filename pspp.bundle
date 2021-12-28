@@ -13,6 +13,7 @@
          either define your own or just hardcode the path here.
     -->
     <prefix name="default">${env:PSPPINSTALL}</prefix>
+    <prefix name="cellar">${env:PSPPINSTALL}/Cellar/pspp/1.4.1</prefix>
 
     <!-- The project directory is the default location of the created
          app. If you leave out the path, the current directory is
@@ -33,7 +34,7 @@
          not needed. If the source path is left out, the default
          script will be used.
     -->
-    <launcher-script>${project}/gtk3-launcher.sh</launcher-script >
+    <launcher-script>${project}/gtk3-launcher.sh</launcher-script>
 
     <!-- Not implemented: Optional runtime, could be python or mono
          for example.
@@ -70,6 +71,11 @@
 <!-- Starting with 2.24, gdk-pixbuf installs into its own directory. -->
   <binary>
     ${prefix}/lib/gdk-pixbuf-2.0/${pkg:gdk-pixbuf-2.0:gdk_pixbuf_binary_version}/loaders/*.so
+  </binary>
+
+<!-- Homebrew: librsvg is not in opt -->
+  <binary>
+    ${prefix}/Cellar/librsvg/2.50.7/lib/*.dylib
   </binary>
 
 <!-- No longer needed for pango >= 1.38
@@ -109,8 +115,9 @@
     ${prefix}/share/icons
   </data>
 
+  <!-- All data from the pspp Cellar-->
   <data>
-    ${prefix}/share/doc/pspp
+    ${prefix:cellar}/share
   </data>
 
   <data>
