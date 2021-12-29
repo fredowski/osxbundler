@@ -8,7 +8,7 @@
 
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
-bundleinstall=`brew --repository`
+bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
@@ -139,13 +139,11 @@ case $buildsource in
       fullreleaseversion=$psppversion-$bundleversion
       brew install --verbose --with-relocation pspp
 esac
-#psppversion="1.5.3"
-#fullreleaseversion="1.5.3-1"
 
 # Create the icns file
-makeicns -256 $bundleinstall/share/icons/hicolor/256x256/apps/pspp.png \
-         -32  $bundleinstall/share/icons/hicolor/32x32/apps/pspp.png \
-         -16  $bundleinstall/share/icons/hicolor/16x16/apps/pspp.png \
+makeicns -256 $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/256x256/apps/pspp.png \
+         -32  $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/32x32/apps/pspp.png \
+         -16  $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/16x16/apps/pspp.png \
          -out pspp.icns
 # Set version information
 sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
