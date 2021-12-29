@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pspp_build_opts: ["--brew", "--brew-nightly"]
+        pspp_build_opts: [brew, brew-nightly]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,12 +45,20 @@ jobs:
 
       - name: Build pspp 
         env:
-          PSPP_BUILD_OPTS: ${{ matrix.pspp_build_opts }}
+          PSPP_BUILD_OPTS: --${{ matrix.pspp_build_opts }}
         run: |
           ./buildpspp.sh $PSPP_BUILD_OPTS
 
-      - name: Archive the pspp bundle
+      - name: Archive the pspp stable bundle
+        if: ${{ matrix.pspp_build_opts == 'brew'}}
         uses: actions/upload-artifact@v2
         with:
-          name: pspp MacOS bundles
-          path: pspp-*.dmg
+          name: pspp MacOS stable dmg
+          path: "pspp-[0-9].[0-9].[0-9]-[0-9].dmg"
+
+      - name: Archive the pspp nightly bundle
+        if:  ${{ matrix.pspp_build_opts == 'brew-nightly'}}
+        uses: actions/upload-artifact@v2
+        with:
+          name: pspp MacOS nightly dmg
+          path: "pspp-[0-9].[0-9].[0-9]-[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]-[0-9].dmg"
