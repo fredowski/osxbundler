@@ -9,7 +9,7 @@
 # This is the installation directory which will be used as macports prefix
 # and as pspp configure prefix.
 bundleinstall=`brew --prefix`
-export PATH=$bundleinstall/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
 bundleversion=1
@@ -43,20 +43,13 @@ if ! test -f ./Info-pspp.plist; then
     exit 1
 fi
 
-buildsource="brew"
+buildsource="--brew"
 if test $# = 1; then
-    if test $1 = "--release"; then
-        echo "Building pspp from macports pspp port"
-        buildsource="release"
-    fi
-    if test $1 = "--nightly"; then
-        echo "Building pspp from Bens nightly package"
-        buildsource="nightly"
-    fi
+    buildsource=$1;
 fi
 
 case $buildsource in
-  "git")
+  "--git")
     #Download gnulib
     gnulibver=0edaafc813caff4101c58405c6ab279597afc0b9
     curl -o gnulib.zip https://codeload.github.com/coreutils/gnulib/zip/$gnulibver
@@ -105,7 +98,7 @@ case $buildsource in
     make install-html
     fullreleaseversion=$psppversion
     popd;;
-  "release")
+  "--release")
     port -v selfupdate
     port upgrade outdated || true
     # Install the pspp package from macports
@@ -114,7 +107,7 @@ case $buildsource in
     # Update the version information
     psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
     fullreleaseversion=$psppversion-$bundleversion;;
-  "nightly")
+  "--nightly")
       curl -o pspp.tgz "https://benpfaff.org/~blp/pspp-master/latest-source.tar.gz"
       tar -xzf pspp.tgz
       psppversion=`ls -d pspp-* | sed -n 's/pspp-\(.*\)/\1/p'`
@@ -134,16 +127,31 @@ case $buildsource in
       make install-html
       fullreleaseversion=$psppversion-$bundleversion
       popd;;
-  "brew")
+  "--brew")
       psppversion=`brew info pspp | sed -n 's/.* stable \([0-9]\.[0-9]\.[0-9]\).*/\1/p'`
       fullreleaseversion=$psppversion-$bundleversion
-      brew install --verbose --with-relocation pspp
+      brew install --verbose --with-relocation pspp;;
+  "--brew-nightly")
+      echo "Build nightly brew HEAD"
+      brew install --verbose --with-relocation --HEAD pspp
+      psppversion=`pspp --version | sed -n 's/pspp (GNU PSPP) \(.*\)/\1/p'`
+      fullreleaseversion=$psppversion-$bundleversion;;
+  *)
+      echo "Option $1 not valid. Exiting"
+      exit;;
 esac
 
+# If pspp is build via the brew formula, then the icons end up in the Cellar
+if test $buildfromsource = "brew"; then
+    psppiconpath=$bundleinstall/Cellar/pspp/$psppversion
+else
+    psppiconpath=$bundleinstall
+fi
+
 # Create the icns file
-makeicns -256 $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/256x256/apps/pspp.png \
-         -32  $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/32x32/apps/pspp.png \
-         -16  $bundleinstall/Cellar/pspp/$psppversion/share/icons/hicolor/16x16/apps/pspp.png \
+makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/pspp.png \
+         -32  $psppiconpath/share/icons/hicolor/32x32/apps/pspp.png \
+         -16  $psppiconpath/share/icons/hicolor/16x16/apps/pspp.png \
          -out pspp.icns
 # Set version information
 sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
@@ -157,6 +165,11 @@ install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/
 
 # produce the pspp.app bundle in Desktop
 export PSPPINSTALL=$bundleinstall
+if test $buildsource = "--brew-nightly"; then
+    export PSPPVERSION="HEAD"
+else
+    export PSPPVERSION=$psppversion
+fi
 gtk-mac-bundler pspp.bundle
 
 # The application will be called in Contents/MacOS/pspp

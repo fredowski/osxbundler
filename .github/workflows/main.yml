@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pspp_build_opts: ["--brew"]
+        pspp_build_opts: ["--brew", "--brew-nightly"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -52,5 +52,5 @@ jobs:
       - name: Archive the pspp bundle
         uses: actions/upload-artifact@v2
         with:
-          name: pspp MacOS bundle
-          path: pspp-1.4.1-1.dmg
+          name: pspp MacOS bundles
+          path: pspp-*.dmg
