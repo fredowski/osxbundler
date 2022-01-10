@@ -7,18 +7,22 @@ Create a [pspp](https://www.gnu.org/software/pspp) application bundle (dmg) for 
 
 https://www.hs-augsburg.de/homes/beckmanf/pspp/
 
+Nightly dmg builds for the released and the nightly pspp versions are availble via the github CI/CD chain:
+
+https://github.com/fredowski/osxbundler/actions
+
 Create Bundle
 =========
 
-The macports build environment is frozen in
+The pspp bundle is build via the homebrew environment and then bundled
+via a
+[modified gtk-mac-bundler](https://github.com/fredowski/gtk-mac-bundler/tree/homebrew)
+version (branch homebrew) which has been adapted to the homebrew environment.
 
-https://github.com/fredowski/macports-ports
-
-in the branch "pspp". Building the complete macports environment takes a couple of hours from scratch. The resulting environment is available as a tgz file. This file is untared in /opt/macports and creates /opt/macports/install
-
-* Create directory /opt/macports and make it writable to the build user
-* Optional: Create the macports build environment with [installmacports.sh](https://github.com/fredowski/osxbundler/blob/master/installmacports.sh)
-* Alternative: [install-build-env.sh](https://github.com/fredowski/osxbundler/blob/master/install-build-env.sh) - Download and install the ready-made macports build environment (for MacOS 10.13.6)
+* Install [Homebrew](https://brew.sh)
+* Clone this repository via `git clone --recurse-submodules
+https://github.com/fredowski/osxbundler.git`
+* Install the build environment with [install-build-env.sh](https://github.com/fredowski/osxbundler/blob/master/install-build-env.sh) 
 * [buildpspp.sh](https://github.com/fredowski/osxbundler/blob/master/buildpspp.sh) - build pspp and create the MacOS application bundle
 
 Contact: pspp-users@gnu.org
