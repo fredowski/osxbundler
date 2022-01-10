@@ -6,7 +6,7 @@
 
 # Install the gtk-mac-bundler tool
 cd gtk-mac-bundler
-make bindir=/usr/local/bin install
+make bindir=`brew --prefix`/bin install
 
 # makeicns tool for creating the apple icon file
 brew install makeicns
