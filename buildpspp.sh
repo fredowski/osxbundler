@@ -12,7 +12,7 @@ bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=1
+bundleversion=2
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -176,7 +176,9 @@ gtk-mac-bundler pspp.bundle
 # That is a launcher script that will call
 # Contents/Resources/bin/psppire
 pushd pspp.app/Contents/MacOS
-rm ./pspp-bin
+#rm ./pspp-bin
+rm ./pspp
+ln -s ../Resources/bin/psppire pspp
 popd
 
 # Create the DMG for distribution
