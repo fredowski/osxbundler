@@ -75,7 +75,7 @@
 
 <!-- Homebrew: librsvg is not in opt -->
   <binary>
-    ${prefix}/Cellar/librsvg/2.50.7/lib/*.dylib
+    ${prefix}/opt/librsvg/lib/*.dylib
   </binary>
 
 <!-- No longer needed for pango >= 1.38
