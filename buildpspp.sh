@@ -12,7 +12,7 @@ bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=2
+bundleversion=1
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -130,12 +130,10 @@ case $buildsource in
   "--brew")
       psppversion=`brew info pspp | sed -n 's/.* stable \([0-9]\.[0-9]\.[0-9]\).*/\1/p'`
       fullreleaseversion=$psppversion-$bundleversion
-      psppiconname=pspp
       brew install --verbose --with-relocation pspp;;
   "--brew-nightly")
       echo "Build nightly brew HEAD"
       brew install --verbose --with-relocation --HEAD pspp
-      psppiconname=org.fsf.pspp
       psppversion=`pspp --version | sed -n 's/pspp (GNU PSPP) \(.*\)/\1/p'`
       fullreleaseversion=$psppversion-$bundleversion;;
   *)
@@ -151,9 +149,9 @@ else
 fi
 
 # Create the icns file
-makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/$psppiconname.png \
-         -32  $psppiconpath/share/icons/hicolor/32x32/apps/$psppiconname.png \
-         -16  $psppiconpath/share/icons/hicolor/16x16/apps/$psppiconname.png \
+makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/org.fsf.pspp.png \
+         -32  $psppiconpath/share/icons/hicolor/32x32/apps/org.fsf.pspp.png \
+         -16  $psppiconpath/share/icons/hicolor/16x16/apps/org.fsf.pspp.png \
          -out pspp.icns
 # Set version information
 sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
