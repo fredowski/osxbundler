@@ -2,7 +2,7 @@
 
 # Build pspp from git or from macports
 
-# Copyright (C) 2020 Free Software Foundation, Inc.
+# Copyright (C) 2020, 2022 Free Software Foundation, Inc.
 # Released under GNU General Public License, either version 3
 # or any later option
 
@@ -130,13 +130,11 @@ case $buildsource in
   "--brew")
       psppversion=`brew info pspp | sed -n 's/.* stable \([0-9]\.[0-9]\.[0-9]\).*/\1/p'`
       fullreleaseversion=$psppversion-$bundleversion
-      pspporgname="org.fsf"
       brew install --verbose --with-relocation pspp;;
   "--brew-nightly")
       echo "Build nightly brew HEAD"
       brew install --verbose --with-relocation --HEAD pspp
       psppversion=`pspp --version | sed -n 's/pspp (GNU PSPP) \(.*\)/\1/p'`
-      pspporgname="org.gnu"
       fullreleaseversion=$psppversion-$bundleversion;;
   *)
       echo "Option $1 not valid. Exiting"
@@ -151,9 +149,9 @@ else
 fi
 
 # Create the icns file
-makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/$pspporgname.pspp.png \
-         -32  $psppiconpath/share/icons/hicolor/32x32/apps/$pspporgname.pspp.png \
-         -16  $psppiconpath/share/icons/hicolor/16x16/apps/$pspporgname.pspp.png \
+makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/org.gnu.pspp.png \
+         -32  $psppiconpath/share/icons/hicolor/32x32/apps/org.gnu.pspp.png \
+         -16  $psppiconpath/share/icons/hicolor/16x16/apps/org.gnu.pspp.png \
          -out pspp.icns
 # Set version information
 sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
