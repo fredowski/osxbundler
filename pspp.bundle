@@ -123,6 +123,9 @@
   <data>
     ${prefix}/share/mime
   </data>
+  <data>
+    ${prefix}/share/gtksourceview-4
+  </data>
 
   <data>
     ${prefix}/share/glib-2.0

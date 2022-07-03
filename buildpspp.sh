@@ -12,7 +12,7 @@ bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=1
+bundleversion=2
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
