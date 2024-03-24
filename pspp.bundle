@@ -73,11 +73,6 @@
     ${prefix}/lib/gdk-pixbuf-2.0/${pkg:gdk-pixbuf-2.0:gdk_pixbuf_binary_version}/loaders/*.so
   </binary>
 
-<!-- Homebrew: librsvg is not in opt -->
-  <binary>
-    ${prefix}/opt/librsvg/lib/*.dylib
-  </binary>
-
 <!-- No longer needed for pango >= 1.38
   <binary>
     ${prefix}/lib/pango/${pkg:pango:pango_module_version}/modules/
