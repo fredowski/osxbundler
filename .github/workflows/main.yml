@@ -19,12 +19,12 @@ jobs:
   # The build job will install the prebuild macports build environment and build the bundle
   build:
     # The type of runner that the job will run on
-    runs-on: [macos-latest, macos-13]
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-latest, macos-12]
         pspp_build_opts: [brew, brew-nightly]
-
+    runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -53,12 +53,12 @@ jobs:
         if: ${{ matrix.pspp_build_opts == 'brew'}}
         uses: actions/upload-artifact@v4
         with:
-          name: pspp MacOS stable dmg
+          name: pspp MacOS stable dmg ${{ matrix.os }}
           path: "pspp-[0-9].[0-9].[0-9]-[0-9].dmg"
 
       - name: Archive the pspp nightly bundle
         if:  ${{ matrix.pspp_build_opts == 'brew-nightly'}}
         uses: actions/upload-artifact@v4
         with:
-          name: pspp MacOS nightly dmg
+          name: pspp MacOS nightly dmg ${{ matrix.os }}
           path: "pspp-[0-9].[0-9].[0-9]-*.dmg"
