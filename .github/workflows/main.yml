@@ -40,6 +40,7 @@ jobs:
         run: |
           cd gtk-mac-bundler
           make bindir=/usr/local/bin install
+          brew uninstall --ignore-dependencies --force pkg-config@0.29.2 || true
           brew install makeicns
           brew tap fredowski/pspp
 
