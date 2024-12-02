@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, macos-12]
+        os: [macos-latest, macos-13]
         pspp_build_opts: [brew, brew-nightly]
     runs-on: ${{ matrix.os }}
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -40,7 +40,6 @@ jobs:
         run: |
           cd gtk-mac-bundler
           make bindir=/usr/local/bin install
-          brew uninstall --ignore-dependencies --force pkg-config@0.29.2 || true
           brew install makeicns
           brew tap fredowski/pspp
 
