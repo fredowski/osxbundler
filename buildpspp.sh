@@ -183,11 +183,10 @@ popd
 
 # Create the DMG for distribution
 tmpdir=$(mktemp -d ./tmp-XXXXXXXXXX)
-mv ./pspp.app $(tmpdir)
+mv ./pspp.app $tmpdir
 rm -rf pspp-*.dmg
-hdiutil create -fs HFS+ -srcfolder $(tmpdir) -volname pspp pspp-$fullreleaseversion.dmg
-mv pspp-$fullreleaseversion.dmg pspp-$fullreleaseversion-`uname -m`.dmg
-rm -rf $(tmpdir)
+hdiutil create -fs HFS+ -srcfolder $tmpdir -volname pspp pspp-$fullreleaseversion-`uname -m`.dmg
+rm -rf $tmpdir
 rm -rf pspp.icns
 
 echo "Done! Your dmg file is pspp-$fullreleaseversion-`uname -m`.dmg"
