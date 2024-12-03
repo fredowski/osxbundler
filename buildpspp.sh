@@ -187,6 +187,7 @@ mkdir /tmp/psppbundle
 mv ./pspp.app /tmp/psppbundle
 rm -rf pspp-*.dmg
 hdiutil create -fs HFS+ -srcfolder /tmp/psppbundle -volname pspp pspp-$fullreleaseversion.dmg
+mv pspp-$fullreleaseversion.dmg pspp-$fullreleaseversion-`uname -m`.dmg
 rm -rf /tmp/psppbundle
 rm -rf pspp.icns
 
