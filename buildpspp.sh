@@ -185,7 +185,17 @@ popd
 tmpdir=$(mktemp -d ./tmp-XXXXXXXXXX)
 mv ./pspp.app $tmpdir
 rm -rf pspp-*.dmg
+# Workaround resource busy bug on github on MacOS 13
+# https://github.com/actions/runner-images/issues/7522
+i=0
+until
 hdiutil create -fs HFS+ -srcfolder $tmpdir -volname pspp pspp-$fullreleaseversion-`uname -m`.dmg
+do
+if [ $i -eq 10 ]; then exit 1; fi
+i=$((i+1))
+sleep 1
+done
+
 rm -rf $tmpdir
 rm -rf pspp.icns
 
