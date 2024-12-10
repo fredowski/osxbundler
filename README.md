@@ -1,7 +1,7 @@
 osxbundler
 =======
 
-[![build status](https://github.com/fredowski/osxbundler/workflows/psppbundle/badge.svg)](https://github.com/fredowski/osxbundler/actions)
+[![build status](https://github.com/fredowski/osxbundler/actions/workflows/main.yml/badge.svg)](https://github.com/fredowski/osxbundler/actions)
 
 Create a [pspp](https://www.gnu.org/software/pspp) application bundle (dmg) for MacOS. Bundles are available here
 
