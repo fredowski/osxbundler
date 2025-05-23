@@ -163,6 +163,17 @@ install_name_tool -id $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $b
 install_name_tool -change @rpath/libpspp-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-$psppversion.dylib $bundleinstall/bin/psppire
 install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/bin/psppire
 
+# The gdk-pixbuf svg loader uses rpath for librsvg. That rpath must be replaced with executable_path.
+if [ -f /opt/homebrew/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib ]; then
+  svgloaderlib=`ls $bundleinstall/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib`
+  librsvgfull=`ls $bundleinstall/opt/librsvg/lib/librsvg-[0-9].[0-9]*.dylib`
+  librsvgbase=`echo $librsvgfull | sed -ne 's/.*\(librsvg-.*dylib\)/\1/p'`
+  install_name_tool -change @rpath/$librsvgbase $librsvgfull $svgloaderlib
+fi
+
+
+
+
 # produce the pspp.app bundle in Desktop
 export PSPPINSTALL=$bundleinstall
 if test $buildsource = "--brew-nightly"; then
