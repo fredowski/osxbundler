@@ -164,7 +164,7 @@ install_name_tool -change @rpath/libpspp-$psppversion.dylib $bundleinstall/lib/p
 install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/bin/psppire
 
 # The gdk-pixbuf svg loader uses rpath for librsvg. That rpath must be replaced with executable_path.
-if [ -f /opt/homebrew/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib ]; then
+if [ -f $bundleinstall/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib ]; then
   svgloaderlib=`ls $bundleinstall/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib`
   librsvgfull=`ls $bundleinstall/opt/librsvg/lib/librsvg-[0-9].[0-9]*.dylib`
   librsvgbase=`echo $librsvgfull | sed -ne 's/.*\(librsvg-.*dylib\)/\1/p'`
