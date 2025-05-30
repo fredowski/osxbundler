@@ -2,7 +2,7 @@
 
 # Build pspp from git or from macports
 
-# Copyright (C) 2020, 2022 Free Software Foundation, Inc.
+# Copyright (C) 2020, 2022, 2025 Free Software Foundation, Inc.
 # Released under GNU General Public License, either version 3
 # or any later option
 
@@ -12,7 +12,7 @@ bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=3
+bundleversion=4
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -127,6 +127,10 @@ case $buildsource in
       make install-html
       fullreleaseversion=$psppversion-$bundleversion
       popd;;
+  "--nobuild")
+      echo "Expect pspp in brew location"
+      psppversion=`pspp --version | sed -n 's/pspp (GNU PSPP) \(.*\)/\1/p'`
+      fullreleaseversion=$psppversion-$bundleversion;;
   "--brew")
       psppversion=`brew info pspp | sed -n 's/.* stable \([0-9]\.[0-9]\.[0-9]\).*/\1/p'`
       fullreleaseversion=$psppversion-$bundleversion
@@ -141,13 +145,7 @@ case $buildsource in
       exit;;
 esac
 
-# If pspp is build via the brew formula, then the icons end up in the Cellar
-if test $buildfromsource = "brew"; then
-    psppiconpath=$bundleinstall/Cellar/pspp/$psppversion
-else
-    psppiconpath=$bundleinstall
-fi
-
+psppiconpath=$bundleinstall
 # Create the icns file
 makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/org.gnu.pspp.png \
          -32  $psppiconpath/share/icons/hicolor/32x32/apps/org.gnu.pspp.png \
@@ -156,41 +154,9 @@ makeicns -256 $psppiconpath/share/icons/hicolor/256x256/apps/org.gnu.pspp.png \
 # Set version information
 sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
 
-# Fix the rpath libraries such that gtc-mac-bundler can work
-# --disable-rpath does not work anymore after relocate.m4 was updated in gnulib
-install_name_tool -id $bundleinstall/lib/pspp/libpspp-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-$psppversion.dylib
-install_name_tool -id $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib
-install_name_tool -change @rpath/libpspp-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-$psppversion.dylib $bundleinstall/bin/psppire
-install_name_tool -change @rpath/libpspp-core-$psppversion.dylib $bundleinstall/lib/pspp/libpspp-core-$psppversion.dylib $bundleinstall/bin/psppire
 
-# The gdk-pixbuf svg loader uses rpath for librsvg. That rpath must be replaced with executable_path.
-if [ -f $bundleinstall/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib ]; then
-  svgloaderlib=`ls $bundleinstall/opt/librsvg/lib/gdk-pixbuf*/*/loaders/libpixbufloader_svg.dylib`
-  librsvgfull=`ls $bundleinstall/opt/librsvg/lib/librsvg-[0-9].[0-9]*.dylib`
-  librsvgbase=`echo $librsvgfull | sed -ne 's/.*\(librsvg-.*dylib\)/\1/p'`
-  install_name_tool -change @rpath/$librsvgbase $librsvgfull $svgloaderlib
-fi
-
-
-
-
-# produce the pspp.app bundle in Desktop
-export PSPPINSTALL=$bundleinstall
-if test $buildsource = "--brew-nightly"; then
-    export PSPPVERSION="HEAD"
-else
-    export PSPPVERSION=$psppversion
-fi
-gtk-mac-bundler pspp.bundle
-
-# The application will be called in Contents/MacOS/pspp
-# That is a launcher script that will call
-# Contents/Resources/bin/psppire
-pushd pspp.app/Contents/MacOS
-#rm ./pspp-bin
-rm ./pspp
-ln -s ../Resources/bin/psppire pspp
-popd
+# produce the pspp.app bundle
+python3 bundle.py
 
 # Create the DMG for distribution
 tmpdir=$(mktemp -d ./tmp-XXXXXXXXXX)

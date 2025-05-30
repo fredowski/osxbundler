@@ -7,7 +7,7 @@
     <key>CFBundleExecutable</key>
     <string>pspp</string>
     <key>CFBundleGetInfoString</key>
-    <string>0.10.1, (C) 1997-2022 http://savannah.gnu.org/projects/pspp</string>
+    <string>0.10.1, (C) 1997-2025 http://savannah.gnu.org/projects/pspp</string>
     <key>CFBundleIconFile</key>
     <string>pspp.icns</string>
     <key>CFBundleIdentifier</key>
@@ -25,9 +25,9 @@
     <key>CFBundleVersion</key>
     <string>0.10.1</string>
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright 1997 - 2022 Free Software Foundation, GNU General Public License.</string>
+    <string>Copyright 1997 - 2025 Free Software Foundation, GNU General Public License.</string>
     <key>LSMinimumSystemVersion</key>
-    <string>10.13</string>
+    <string>13.0</string>
     <key>CFBundleDocumentTypes</key>
     <array>
       <dict>

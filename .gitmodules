@@ -1,4 +1,0 @@
-[submodule "gtk-mac-bundler"]
-	path = gtk-mac-bundler
-	url = git@github.com:fredowski/gtk-mac-bundler.git
-	branch = homebrew
