@@ -32,12 +32,6 @@ if ! test -f /usr/bin/clang; then
     exit 1
 fi
 
-# Check the required configuration files
-if ! test -f ./pspp.bundle; then
-    echo "pspp.bundle is missing"
-    exit 1
-fi
-
 if ! test -f ./Info-pspp.plist; then
     echo "Info-pspp.plist is missing"
     exit 1
