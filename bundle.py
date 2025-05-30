@@ -139,7 +139,7 @@ def codesign(dir):
             print(res)
 
 def copy_share():
-    dirs = ["applications","doc","glib-2.0","gtksourceview-4","icons","locale","metainfo","mime","pspp","themes"]
+    dirs = ["applications","doc/pspp","glib-2.0","gtksourceview-4","icons","locale","metainfo","mime","pspp","themes"]
     for dir in dirs:
         shutil.copytree(homebrew_prefix()+"/share/"+dir,skeldir+"/Contents/Resources/share/"+dir)
 
