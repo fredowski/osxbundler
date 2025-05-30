@@ -15,12 +15,11 @@ Create Bundle
 =========
 
 The pspp bundle is build via the homebrew environment and then bundled
-via a
-[modified gtk-mac-bundler](https://github.com/fredowski/gtk-mac-bundler/tree/homebrew)
-version (branch homebrew) which has been adapted to the homebrew environment.
+via a "bundle.py" which is following the ideas of a
+[modified gtk-mac-bundler](https://github.com/fredowski/gtk-mac-bundler/tree/homebrew).
 
 * Install [Homebrew](https://brew.sh)
-* Clone this repository via `git clone --recurse-submodules
+* Clone this repository via `git clone
 https://github.com/fredowski/osxbundler.git`
 * Install the build environment with [install-build-env.sh](https://github.com/fredowski/osxbundler/blob/master/install-build-env.sh) 
 * [buildpspp.sh](https://github.com/fredowski/osxbundler/blob/master/buildpspp.sh) - build pspp and create the MacOS application bundle
