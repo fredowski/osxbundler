@@ -12,7 +12,9 @@ bundleinstall=`brew --prefix`
 export PATH=$bundleinstall/bin:$bundleinstall/opt/texinfo/bin:$bundleinstall/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 # bundleversion if the pspp release did not change but the build environment
-bundleversion=4
+bundleversion=1
+
+skipdmg=no
 
 # Test that the macports install directory exists
 if ! test -d $bundleinstall; then
@@ -43,6 +45,38 @@ if test $# = 1; then
 fi
 
 case $buildsource in
+  "--simple")
+    # Assume pspp source code prepared
+    psppsource=$HOME/pspp/pspp
+    if ! test -f $psppsource/configure; then
+      echo "prepared pspp source not found"
+      exit 1
+    fi
+    # Retrieve and Set Version Info
+    pushd $psppsource
+    gitversion=`git log --pretty=format:"%h" -1`
+    repoversion=`sed -n 's/AC_INIT.*\[\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' configure.ac`
+    psppversion=$repoversion-g$gitversion-$bundleversion
+    popd
+    # Build
+    mkdir -p ./build
+    pushd ./build
+    if ! test -f ./config.log; then
+        $psppsource/configure --disable-rpath \
+                          --prefix=$bundleinstall \
+                          --without-perl-module \
+                          CFLAGS="-O0 -g" \
+                         LDFLAGS="-L$bundleinstall/lib -L$bundleinstall/Cellar/libiconv/1.18/lib" \
+                         CPPFLAGS="-I$bundleinstall/include -I$bundleinstall/Cellar/libiconv/1.18/include" \
+                         PKG_CONFIG_PATH=$bundleinstall/lib/pkgconfig \
+                         --enable-relocatable
+    fi
+    make -j 10 VERSION=$psppversion
+    make install
+    make install-html
+    skipdmg=yes
+    fullreleaseversion=$psppversion
+    popd;;
   "--git")
     #Download gnulib
     gnulibver=0edaafc813caff4101c58405c6ab279597afc0b9
@@ -81,8 +115,10 @@ case $buildsource in
     pushd build
     $psppsource/configure --disable-rpath \
                           --prefix=$bundleinstall \
-                         LDFLAGS=-L$bundleinstall/lib \
-                         CPPFLAGS=-I$bundleinstall/include \
+                          --without-perl-module \
+                          CFLAGS="-O0 -g" \
+                         LDFLAGS="-L$bundleinstall/lib -L$bundleinstall/Cellar/libiconv/1.18/lib" \
+                         CPPFLAGS="-I$bundleinstall/include -I$bundleinstall/Cellar/libiconv/1.18/include" \
                          PKG_CONFIG_PATH=$bundleinstall/lib/pkgconfig \
                          --enable-relocatable
     make VERSION=$psppversion
@@ -92,15 +128,6 @@ case $buildsource in
     make install-html
     fullreleaseversion=$psppversion
     popd;;
-  "--release")
-    port -v selfupdate
-    port upgrade outdated || true
-    # Install the pspp package from macports
-    echo "Installing pspp from macports package"
-    port -N install pspp +reloc +doc
-    # Update the version information
-    psppversion=`port info pspp | sed -n 's/pspp @\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p'`
-    fullreleaseversion=$psppversion-$bundleversion;;
   "--nightly")
       curl -o pspp.tgz "https://benpfaff.org/~blp/pspp-master/latest-source.tar.gz"
       tar -xzf pspp.tgz
@@ -150,9 +177,11 @@ sed "s/0.10.1/$fullreleaseversion/g" Info-pspp.plist > Info-pspp-version.plist
 
 
 # produce the pspp.app bundle
+rm -rf pspp.app
 python3 bundle.py
 
 # Create the DMG for distribution
+if ! test $skipdmg = "yes"; then
 tmpdir=$(mktemp -d ./tmp-XXXXXXXXXX)
 mv ./pspp.app $tmpdir
 rm -rf pspp-*.dmg
@@ -170,5 +199,8 @@ done
 rm -rf $tmpdir
 rm -rf pspp.icns
 
+
 echo "Done! Your dmg file is pspp-$fullreleaseversion-`uname -m`.dmg"
 echo "You can remove the install directory: $bundleinstall"
+fi
+
