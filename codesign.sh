@@ -66,6 +66,11 @@ UUID=$(xcrun notarytool submit $dmgfilename \
   --keychain-profile pspp-notary-password \
   --output-format json | jq -r '.id')
 
+if [ -z "$UUID" ]; then
+  echo "Notarization submit failed" >&2
+  exit 1
+fi
+
 echo "The bundle is uploaded to notarization with UUID $UUID"
 echo "Check the notarization status with:\n"
 echo "xcrun notarytool info --keychain-profile pspp-notary-password $UUID\n"
